@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> 
+    <title>نمایش فروشکاه</title>
+    <style>
+        #map{
+            width: 1000px;
+            height: 660px;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+        <div id="map"></div>
+        <script>
+            const shop=[
+                {
+                    position:[40.7160, -74.0020],
+                    name: "shop1",
+                    description:"sh"
+                },
+                {
+                    position:[40.7190, -74.2120],
+                    name: "shop2",
+                    description:"sh2"
+                }
+            ]
+            var map=L.map('map',{
+                center:[40.7128, -74.0060],
+                 zoom:11,
+            });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            
+            shop.forEach(function(item){
+                L.marker(item.position).addTo(map).bindPopup(
+                   ` <h1>${item.name}<h1></br><b>${item.description}</b>`
+                );
+            });
+           const line = L.polyline([
+               [40.7160, -74.0020],
+               [40.7190, -74.2120]
+              ],{
+            color:'blue',
+            weight:3,
+            
+        }).addTo(map)
+        map.on("click",function(e){
+           const lat=e.latlng.lat;
+           const lan=e.latlng.lan;
+           console.log(lan,lat);
+           const marker=L.marker(e.latlng,{
+            draggable:true
+           }).bindPopup(`${lat},${lan}`).addTo(map)
+            
+        })
+        map.on("dragstart",(e)=>{
+            console.log("start");
+            
+        })
+        map.on("dragend",(e)=>{
+            console.log(end);
+            
+        });
+        map.on("zoomend",(e)=>{
+            console.log(map.getZoom());
+            
+        })
+        map.on("moveend",(e)=>{
+            console.log(map.getCenter());
+            
+        })
+        </script>
+</body>
+</html>

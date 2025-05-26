@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin panel</title>
+    <title>ردیابی خودرو</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+
+    <link rel="stylesheet" href="./output.css"/>
+</head>
+<body>
+    <main class="w-full h-full  ">
+          <section class="flex justify-center items-center h-[100vh] w-full">
+                <section class=" w-[600px] h-auto flex justify-center items-center flex-wrap   *:py-1 *:my-2 *:h-1/10">
+                    <div class="w-[70%] text-center">
+                        <h1 class="text-2xl font-bold"> ادمین پنل</h1>
+                    </div>
+                   
+                        <input id="vazn" class="w-[60%] p-2" type="number" placeholder= "وزن بار" required/>
+                        <input id="model" class="w-[60%] p-2" type="text" placeholder= " مدل ماشین" required/>
+                        <input id="noeBar" class="w-[60%] p-2" type="text" placeholder= " نوع بار" required/>
+                        <input id="src" class="w-[60%] p-2" type="text" placeholder= " مبدا" required/>
+                        <input id="des" class="w-[60%] p-2" type="text" placeholder= " مقصد" required/>
+                        <input id="name" class="w-[60%] p-2" type="text" placeholder= " مشخصات راننده" required/>
+                        <input id="license" class="w-[60%] p-2" type="text" placeholder= " شماره گواهی نامه" required/>
+                        <input id="codeEmployee" class="w-[60%] p-2" type="text" placeholder= " شماره کارمندی" required/>
+                        <input id="email" class="w-[60%] p-2" type="email" placeholder= "  ایمیل" required/>
+                        <input id="phone" class="w-[60%] p-2" type="text" placeholder= "  شماره همراه" required/>
+                        <button onclick="register(this)" class="w-[50%] p-2 cursor-pointer"  type="button">ارسال</button>
+                      
+                 
+                </section>
+        </section>
+</main>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="script/script.js"></script>
+</body>
+</html>

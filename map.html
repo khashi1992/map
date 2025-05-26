@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقشه</title>
+    <link rel="stylesheet" href="./output.css"/>
+     
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> 
+    <!-- <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script src="leaflet/leaflet.js"></script> -->
+    <style>
+        #map{
+            width: 100%;
+            height: 100vh;
+        }
+        body{
+          font-size: 22px;
+          font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+          font-weight: 500;
+        }
+        .btn{
+            width: 200px;
+            height: 100px;
+            border: 1px solid black;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 4px;
+        }
+        .btn:hover{
+            opacity: 0.9;
+            background-color: rgba(222, 184, 135, 0.621);
+            transition:all 0.4s ease-in-out;
+        }
+        .btn2{
+          font-size: 24px;
+          cursor: none;
+        }
+    </style>
+</head>
+<body>
+    <button class="btn" onclick="showCitiesOnMap()">نمایش روی نقشه</button>
+    <button class="btn" onclick="removeItem()">خروج روی نقشه</button>
+    <button class="btn btn2" id="h1"></button>
+    <div  id="map" class="w-full h-[500px]"></div>
+    
+   <script >
+       const vazn =localStorage.getItem("vazn")
+      document.getElementById("h1").innerText="وزن بار"+vazn+"\tتن";
+        var map = L.map('map',{
+          center:[35.6892, 51.3890],
+          zoom:10,
+         
+        
+        });
+       
+        
+         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+             attribution: '<br style=" font-size: 24px;" >خشایار مدد-رضا اعتماد<b/>'
+         }).addTo(map);         
+        
+       
+       async function getCoordinates(city) {
+          const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city}`);
+          const data = await response.json();
+          if (data && data[0]) {
+            // console.log(data,data[0]);
+            
+            return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+          } else {
+            alert(`مختصات ${city} پیدا نشد`);
+            return null;
+          }
+        }
+            
+        async function showCitiesOnMap() {
+
+          const city1 =localStorage.getItem("src")
+          const city2 = localStorage.getItem("des")
+          // console.log(city1,city2);
+            
+          var coords1 = await getCoordinates(city1);
+          var coords2 = await getCoordinates(city2);
+          console.log(coords1,coords2);
+        
+          
+
+          if (coords1 && coords2) {
+              let pointA=L.latLng(coords1)
+              let pointB=L.latLng(coords2)
+                //محاسبه مسافت
+            const distance = pointA.distanceTo(pointB);
+            let d=distance/1000;  
+            //محاسبه مدت زمان
+              let speed=80;
+              let timeHour=d/speed;
+              let fix=timeHour.toFixed(2)
+              // محاسبه یک نقطه تصادفی بین مبدا و مقصد
+
+              var randomLat = coords1[0] + Math.random() * (coords2[0] - coords1[0]);
+              var randomLng = coords1[1] + Math.random() * (coords2[1] - coords1[1]);
+              var randomWarehouse = [randomLat, randomLng];
+              console.log(randomWarehouse);
+              
+            L.marker(coords1).addTo(map).bindPopup(city1).bindPopup(` <b style="font-size: 22px;font-weight: 500;">مبدا</b></br><h2 style="font-size: 22px;font-weight: 500;">وزن بار<span>${vazn}\t</span>تن</h2></br><h2 style="font-size: 22px;font-weight: 500;"> مسافت:${parseInt(d)}\t کیلومتر</h2></br><h2 style="font-size: 22px;font-weight: 500;">  مدت زمان با سرعت 80 کیلومتر:${fix}ساعت\t</h2>`);
+            L.marker(coords2).addTo(map).bindPopup(city2).bindPopup(' <b>مقصد</b>');
+            L.marker(randomWarehouse).addTo(map).bindPopup(randomWarehouse).bindPopup(' <b>انبار</b>').openPopup()    
+            // تطبیق نمای نقشه به موقعیت دو شهر
+            const bounds = L.latLngBounds([coords1, coords2]);
+            map.fitBounds(bounds, { padding: [50, 50] });
+          }
+         const url=`http://router.project-osrm.org/route/v1/driving/${coords1[1]},${coords1[0]};${coords2[1]},${coords2[0]}?overview=full&geometries=geojson`;     
+         fetch(url).then(res =>res.json()).then(data =>{
+        console.log(data)
+        const coordinates = data.routes[0].geometry.coordinates
+        // console.log(coordinates)
+        const latLang = coordinates.map(coor => [coor[1],coor[0]])
+        // console.log(latLang)
+        L.polyline(latLang,{
+            color: 'blue',
+            weight: 6,
+            opacity: 0.8
+        }).addTo(map)
+       })
+        }
+              
+      
+       
+       
+       
+       
+        function removeItem(){
+            localStorage.clear();
+            location.href="login.html ";           
+        }
+   </script>
+   <script src="script/map.js"></script> 
+   <script src="script/script.js"></script> 
+</body>
+</html>

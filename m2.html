@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+</head>
+<body>
+    <div id="map" style="height: 600px;"></div>
+
+<script>
+// ساخت نقشه
+var map = L.map('map').setView([35.6892, 51.3890], 12); // مختصات تهران
+
+// لایه نقشه
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// نقاط مسیر: مبدا، انبار (توقف)، مقصد
+var waypoints = [
+    L.latLng(35.6892, 51.3890), // مبدا (مثلا تهران)
+    L.latLng(35.7324, 51.4221), // توقف در انبار
+    L.latLng(35.7440, 51.4667)  // مقصد
+];
+
+// افزودن مسیریابی به نقشه
+L.Routing.control({
+    waypoints: waypoints,
+    routeWhileDragging: true, // امکان جابجایی مسیر با موس
+    show: true,
+    draggableWaypoints: true
+}).addTo(map);
+</script>
+
+</body>
+</html>
